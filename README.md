@@ -36,7 +36,7 @@ vscode
 npx
 (pgAdmin, postman, nodemon) optional
 
-## setup
+## setup client and server
 > cd server
 > nvm use 20 (v20.9.0)
 > npm init
@@ -51,3 +51,44 @@ install express, pg, dotenv
 > npm install axios
 note: axios has 6 high vulnerabilities, 2 moderate
 
+## setup db
+will use a docker postgresql image
+docker login --username your_username_here.
+ie angelahe
+
+go to hub.docker.com search for postgres
+docker pull postgres
+docker images
+
+docker postgreSQL image:
+
+see .env which wasn't committed to git
+docker run --name postgres16 -e POSTGRES_USER=<username> -e POSTGRES_PASSWORD=<password> -p 8070:8070 -d postgres 
+
+(port already in use), used 8070
+netstat -an | grep LISTEN
+
+docker ps // to see the docker process is up and running
+
+docker exec -it postgres16 psql -U root
+select now();  //to confirm I'm connected
+\q to quit
+
+## create db and populate it
+> docker cp ./<path_to_file>/init.sql <container_name>:/tmp/init.sql
+ie docker cp ./init.sql postgres16:/tmp/init.sql
+
+> docker exec -it <container_name> /bin/bash -c "psql -U <postgres_user> -d <postgres_database> -f /tmp/init.sql"
+
+ie docker exec -ti postgres16 /bin/bash -c "psql -U root -d public -f /tmp/init.sql"
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  database "public" does not exist
+
+instead do right from command line:
+> after docker exec -it
+> psql -h localhost -U postgres
+# CREATE DATABASE public
+# \l // for list of databases
+# q
+# \c public // to connect to db I just created
+paste content of init.sql to insert the table and data
+confirm it's in by SELECT * from products;
