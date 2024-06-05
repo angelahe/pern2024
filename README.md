@@ -92,3 +92,10 @@ instead do right from command line:
 # \c public // to connect to db I just created
 paste content of init.sql to insert the table and data
 confirm it's in by SELECT * from products;
+
+## create the API
+index.js to create the API
+> node index.js
+Server listening on port 9000
+
+test http://localhost:9000 and should return 'Hello World'
