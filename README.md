@@ -99,3 +99,36 @@ index.js to create the API
 Server listening on port 9000
 
 test http://localhost:9000 and should return 'Hello World'
+
+optional files for organization:
+- Routes: Forward the requests to the appropriate controller functions, to handle them;
+- Controllers: Contain functions to handle specific routes and determine the appropriate response to send back to the user;
+- Services: Contain functions to handle possible errors;
+- Database files: Contain functions to perform CRUD operations in a database.
+
+## configure the postgresql connection
+
+create connection between the db and the api
+create db.config.js - config file to connect to postgresql using a connection string
+
+use pg to create a connection pool (cache of db connections maintained for efficient reuse in future db requests)
+
+check if connection is working:
+create route for products
+
+## troubleshoot the connection
+lsof -i :9000 // make sure port not used elsewhere
+> node index.js
+then try get http://localhost:9000/products
+
+get error:
+Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:217:20) {
+  errno: -54,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+
+and in postman, get socket hang up
+
+docker logs postgres16
