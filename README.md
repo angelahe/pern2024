@@ -131,4 +131,16 @@ Error: read ECONNRESET
 
 and in postman, get socket hang up
 
-docker logs postgres16
+docker logs postgres16i
+
+## see Mike discussion in backend master
+changed env to port 5432, will need to recreate the data again
+
+TODO: next layer is to have a db container that has an external volume for writing the data
+
+## re-enter the data
+create docker with -p 8070:5432
+docker exec -it postgres16 psql -U root
+CREATE DATABASE public
+\q
+docker exec -ti postgres16 /bin/bash -c "psql -U root -d public -f /tmp/init.sql"

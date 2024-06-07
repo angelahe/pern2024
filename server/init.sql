@@ -1,3 +1,4 @@
+CREATE DATABASE public;
 --- Create a table for the database
 CREATE TABLE public.products
 (
