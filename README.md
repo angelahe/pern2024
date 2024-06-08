@@ -144,3 +144,16 @@ docker exec -it postgres16 psql -U root
 CREATE DATABASE public
 \q
 docker exec -ti postgres16 /bin/bash -c "psql -U root -d public -f /tmp/init.sql"
+
+## make API calls from the UI
+2 options:
+axios * using here
+fetch
+
+update package.json to have proxy 9000
+update App.js
+- useState: A React hook that allows declaring a state variable and its setter function to update the state;
+- useEffect: A React hook that allows declaring an effect that should run after every render, in this case, or when certain values change.
+
+> npm i bootstrap
+
