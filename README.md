@@ -157,3 +157,88 @@ update App.js
 
 > npm i bootstrap
 
+## Building UI next steps
+organize your project using:
+
+Components: reusable code for creating UI;
+Pages: represent different routes or sections of the application, and are responsible for rendering the content for a specific route;
+Contexts: way to pass data through the component tree;
+Services: API requests.
+
+## Dockerize everything
+create images for front-end and back-end
+
+### create docker files
+create DockerFile in /server and /client
+(no file extension)
+these likely won't work until I know more about Docker
+
+### create .dockerignore files
+node_modules
+
+### build docker images
+from /server and /client folders
+docker build -t server:latest .
+docker build -t client:latest .
+
+### create containers
+
+
+docker run --name <container_name> -p 3000:3000 -d client
+
+in this case:
+docker run --name pern2024_server -p 9000:9000 -d server
+docker run --name pern2024_client -p 3000:3000 -d client
+
+is now broken: connections between containers are broken
+to fix, either inspect IP addresses with 
+docker inspect <container-name> and change the .env file PG_HOST from serverside and package.json (proxy) from client side 
+
+BETTER WAY
+create docker bridge network, so all containers share the same network
+
+docker network create <network_name>
+in this case
+docker network create pern2024
+
+### connect the containers
+docker network connect <network_name> <container_name>
+
+so:
+docker network connect pern2024 postgres16
+docker network connect pern2024 pern2024_client
+docker network connect pern2024 pern2024_server
+
+### config changes
+the .env file (server-side) and package.json (client-side)
+with the name of the containers to connect
+postgres16 (on server)
+ "proxy": "http://pern2024_server:9000", (on client)
+
+then rebuild and rerun the containers
+
+### run the containers
+
+postman: http://pern2024_server:9000/
+
+## other notes:
+TODO: test this - doesn't work from cmd line
+docker-compose down
+docker-compose up --build
+
+oops in package.json should be 
+"name": "pern2024_client"
+
+// also, forgot to connect the new containers to the network when created again
+docker network connect pern2024 pern2024_client
+docker network connect pern2024 pern2024_server
+
+theory: (server is exiting)
+can't connect to postgres16 anymore
+my theory when on the same network, should be port 5432 instead. so in .env PGPORT 5432
+
+that was IT!!! woot
+in browser:
+http://localhost:3000
+in postman:
+http://localhost:9000/products
